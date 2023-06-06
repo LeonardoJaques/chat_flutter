@@ -12,13 +12,30 @@ class AuthPage extends StatefulWidget {
 
 class _AuthPageState extends State<AuthPage> {
   bool _isLoading = false;
-  void _handleAuthFormSubmit(AuthFormData formData) {
-    setState(() => _isLoading = true);
-    print('AuthForm');
-    print(formData.name);
-    print(formData.email);
 
-    setState(() => _isLoading = false);
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+      ),
+    );
+  }
+
+  Future<void> _handleAuthFormSubmit(AuthFormData formData) async {
+    try {
+      setState(() => _isLoading = true);
+      if (formData.isLogin) {
+        //Login
+      } else {
+        //Signup
+      }
+    } catch (e) {
+      _showError('Ocorreu um erro inesperado! Tente novamente mais tarde.');
+      setState(() => _isLoading = false);
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
