@@ -4,8 +4,11 @@ import 'package:chat_flutter/core/model/chat_user.dart';
 import 'package:chat_flutter/core/services/auth/auth_service.dart';
 
 class AuthMockService implements AuthService {
+  static Map<String, ChatUser> _users = {};
+  static ChatUser? _currentUser;
+
   @override
-  ChatUser? get currentUser => throw UnimplementedError();
+  ChatUser? get currentUser => _currentUser;
 
   @override
   Stream<ChatUser?> get currentUserChanges => throw UnimplementedError();
