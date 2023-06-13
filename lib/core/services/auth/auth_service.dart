@@ -10,7 +10,7 @@ abstract class AuthService {
     String email,
     String password,
     String name,
-    File image,
+    File? image,
   );
 
   Future<void> login(

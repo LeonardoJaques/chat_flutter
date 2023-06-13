@@ -1,4 +1,5 @@
 import 'package:chat_flutter/components/auth_form.dart';
+import 'package:chat_flutter/core/services/auth/auth_mock_service.dart';
 import 'package:flutter/material.dart';
 
 import '../core/model/auth_form_data.dart';
@@ -26,9 +27,14 @@ class _AuthPageState extends State<AuthPage> {
     try {
       setState(() => _isLoading = true);
       if (formData.isLogin) {
-        //Login
+        AuthMockService().login(formData.email, formData.password);
       } else {
-        //Signup
+        AuthMockService().signup(
+          formData.name,
+          formData.email,
+          formData.password,
+          formData.image,
+        );
       }
     } catch (e) {
       _showError('Ocorreu um erro inesperado! Tente novamente mais tarde.');
