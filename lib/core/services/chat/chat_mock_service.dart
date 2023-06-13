@@ -8,28 +8,28 @@ import 'package:chat_flutter/core/services/chat/chat_service.dart';
 class ChatMockService implements ChatService {
   static final List<ChatMessage> _msgs = [
     ChatMessage(
-      id: '1',
+      id: '2',
       text: 'Olá, tudo bem?',
       createdAt: DateTime.now().subtract(Duration(minutes: 10)),
-      userId: '1',
+      userId: '2',
       userName: 'João',
-      userImageUrl: 'asset/images/avatar.png',
-    ),
-    ChatMessage(
-      id: '2',
-      text: 'Olá, Teremos reunião hoje?	',
-      createdAt: DateTime.now().subtract(Duration(minutes: 11)),
-      userId: '1',
-      userName: 'João 2',
-      userImageUrl: 'asset/images/avatar.png',
+      userImageUrl: 'assets/images/avatar.png',
     ),
     ChatMessage(
       id: '3',
+      text: 'Olá, Teremos reunião hoje?	',
+      createdAt: DateTime.now().subtract(Duration(minutes: 11)),
+      userId: '3',
+      userName: 'João 2',
+      userImageUrl: 'assets/images/avatar.png',
+    ),
+    ChatMessage(
+      id: '1',
       text: 'Sim, as 14h',
       createdAt: DateTime.now().subtract(Duration(minutes: 12)),
       userId: '1',
       userName: 'João 3',
-      userImageUrl: 'asset/images/avatar.png',
+      userImageUrl: 'assets/images/avatar.png',
     )
   ];
 
