@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:chat_flutter/core/model/chat_notification.dart';
 import 'package:flutter/material.dart';
 
@@ -9,13 +7,17 @@ class ChatNotificationService with ChangeNotifier {
     return [..._items];
   }
 
+  int get itemsCount {
+    return _items.length;
+  }
+
   Future<void> add(ChatNotification notification) async {
     _items.add(notification);
     notifyListeners();
   }
 
-  Future<void> remove(Int index) async {
-    _items.remove(index);
+  Future<void> remove(int index) async {
+    _items.removeAt(index);
     notifyListeners();
   }
 }
