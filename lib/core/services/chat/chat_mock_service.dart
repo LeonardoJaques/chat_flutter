@@ -6,38 +6,13 @@ import 'package:chat_flutter/core/model/chat_user.dart';
 import 'package:chat_flutter/core/services/chat/chat_service.dart';
 
 class ChatMockService implements ChatService {
-  static final List<ChatMessage> _msgs = [
-    ChatMessage(
-      id: '2',
-      text: 'Olá, tudo bem?',
-      createdAt: DateTime.now().subtract(Duration(minutes: 10)),
-      userId: '2',
-      userName: 'João',
-      userImageUrl: 'assets/images/avatar.png',
-    ),
-    ChatMessage(
-      id: '3',
-      text: 'Olá, Teremos reunião hoje?	',
-      createdAt: DateTime.now().subtract(Duration(minutes: 11)),
-      userId: '3',
-      userName: 'João 2',
-      userImageUrl: 'assets/images/avatar.png',
-    ),
-    ChatMessage(
-      id: '1',
-      text: 'Sim, as 14h',
-      createdAt: DateTime.now().subtract(Duration(minutes: 12)),
-      userId: '1',
-      userName: 'João 3',
-      userImageUrl: 'assets/images/avatar.png',
-    )
-  ];
+  static final List<ChatMessage> _msgs = [];
 
   static MultiStreamController<List<ChatMessage>>? _controller;
 
   static final _msgsStream = Stream<List<ChatMessage>>.multi((controller) {
     _controller = controller;
-    controller.add(_msgs);
+    controller.add(_msgs.reversed.toList());
   });
 
   @override
@@ -56,7 +31,7 @@ class ChatMockService implements ChatService {
       userImageUrl: user.imageUrl,
     );
     _msgs.add(newMessage);
-    _controller?.add(_msgs);
+    _controller?.add(_msgs.reversed.toList());
     return newMessage;
   }
 }
