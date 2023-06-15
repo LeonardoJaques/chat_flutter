@@ -1,27 +1,19 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:chat_flutter/core/model/chat_user.dart';
 import 'package:chat_flutter/core/services/auth/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthFirebaseService implements AuthService {
-  static final _defaultUsers = ChatUser(
-    id: '1',
-    name: 'teste',
-    email: 'teste@teste.com',
-    imageUrl: 'assets/images/avatar.png',
-  );
-
-  static Map<String, ChatUser> _users = {
-    _defaultUsers.email: _defaultUsers,
-  };
   static ChatUser? _currentUser;
-  static MultiStreamController<ChatUser?>? _controller;
 
-  static final _useStream = Stream<ChatUser?>.multi((controller) {
-    _controller = controller;
-    _updateUser(_defaultUsers);
+  static final _useStream = Stream<ChatUser?>.multi((controller) async {
+    final authChanges = FirebaseAuth.instance.authStateChanges();
+    await for (final user in authChanges) {
+      _currentUser = user == null ? null : _toChatUser(user);
+      controller.add(_currentUser);
+    }
   });
 
   @override
@@ -31,37 +23,39 @@ class AuthFirebaseService implements AuthService {
   Stream<ChatUser?> get currentUserChanges => _useStream;
 
   @override
-  Future<void> login(String email, String password) async {
-    if (!_users.containsKey(email)) {
-      throw Exception('Usuário não encontrado');
-    }
-    _updateUser(_users[email]);
-  }
-
-  @override
-  Future<void> logout() async {
-    _updateUser(null);
-  }
-
-  @override
   Future<void> signup(
     String name,
     String email,
     String password,
     File? image,
   ) async {
-    final newUser = ChatUser(
-      id: Random.secure().nextDouble().toString(),
-      name: name,
+    final auth = FirebaseAuth.instance;
+    UserCredential credential = await auth.createUserWithEmailAndPassword(
       email: email,
-      imageUrl: image?.path ?? 'assets/images/avatar.png',
+      password: password,
     );
-    _users.putIfAbsent(email, () => newUser);
-    _updateUser(newUser);
+    if (credential.user == null) {
+      throw Exception('Erro ao criar usuário');
+    }
+
+    credential.user!.updateDisplayName(name);
+    // credential.user!.updatePhotoURL(image?.path ?? 'assets/images/avatar.png');
   }
 
-  static void _updateUser(ChatUser? user) {
-    _currentUser = user;
-    _controller?.add(_currentUser);
+  @override
+  Future<void> login(String email, String password) async {}
+
+  @override
+  Future<void> logout() async {
+    await FirebaseAuth.instance.signOut();
+  }
+
+  static ChatUser _toChatUser(User user) {
+    return ChatUser(
+      id: user.uid,
+      name: user.displayName ?? user.email!.split('@')[0],
+      email: user.email!,
+      imageUrl: user.photoURL ?? 'assets/images/avatar.png',
+    );
   }
 }
