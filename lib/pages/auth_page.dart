@@ -25,6 +25,7 @@ class _AuthPageState extends State<AuthPage> {
 
   Future<void> _handleAuthFormSubmit(AuthFormData formData) async {
     try {
+      if (!mounted) return;
       setState(() => _isLoading = true);
       if (formData.isLogin) {
         AuthService().login(formData.email, formData.password);
@@ -40,6 +41,7 @@ class _AuthPageState extends State<AuthPage> {
       _showError('Ocorreu um erro inesperado! Tente novamente mais tarde.');
       setState(() => _isLoading = false);
     } finally {
+      if (!mounted) return;
       setState(() => _isLoading = false);
     }
   }
